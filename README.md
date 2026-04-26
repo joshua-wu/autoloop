@@ -49,9 +49,59 @@ autoloop 是一套通用的三角分工自主循环框架，灵感来自 Karpath
 - **严格评估** — 评估器以高标准执行，问题分级（Critical/Major/Minor），标准只升不降。
 - **智能停止** — 支持轮数上限、连续失败/跳过/丢弃阈值，不会无意义地空转。
 
+## 安装 Claude Code Skill
+
+安装后可以在任何项目中直接使用 `/autoloop` 命令一键启动。
+
+### 安装
+
+将本仓库克隆到本地，然后执行：
+
+```bash
+# 克隆仓库
+git clone https://github.com/wujian/autoloop.git
+cd autoloop
+
+# 创建 skill 目录并复制文件
+mkdir -p ~/.claude/skills/autoloop/templates
+cp skill/SKILL.md ~/.claude/skills/autoloop/SKILL.md
+cp templates/* ~/.claude/skills/autoloop/templates/
+```
+
+安装完成后，重启 Claude Code，在任意 Git 仓库中输入 `/autoloop` 即可使用。
+
+### 卸载
+
+```bash
+rm -rf ~/.claude/skills/autoloop
+```
+
+重启 Claude Code 即生效。
+
+### 验证安装
+
+在 Claude Code 中输入：
+
+```
+/autoloop
+```
+
+如果看到交互式引导（询问角色、任务目标等），说明安装成功。
+
 ## Quick Start
 
-### 1. 准备工作目录
+有两种使用方式：**通过 Skill**（推荐）或**手动复制模板**。
+
+### 方式一：通过 Skill（推荐）
+
+1. 按上方说明安装 skill
+2. 在你的项目目录（Git 仓库）中打开 Claude Code
+3. 输入 `/autoloop`，按引导完成配置
+4. 循环自动启动
+
+### 方式二：手动复制模板
+
+#### 1. 准备工作目录
 
 在你的项目根目录（Git 仓库）中，复制模板文件：
 
@@ -61,7 +111,7 @@ cp autoloop/templates/generator.md  ./
 cp autoloop/templates/evaluator.md  ./
 ```
 
-### 2. 编写 config.md
+#### 2. 编写 config.md
 
 参考 `templates/config.md` 或 `examples/` 中的示例，创建你自己的配置：
 
@@ -83,18 +133,12 @@ evaluation_methods:
   - read_files: true
 ```
 
-### 3. 启动
+#### 3. 启动
 
 在 Claude Code 中：
 
 ```
 读取 program.md，开始 Setup
-```
-
-或者如果你安装了 autoloop skill：
-
-```
-/autoloop
 ```
 
 调度器会引导你完成初始化，然后自动开始循环。

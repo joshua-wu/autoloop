@@ -49,9 +49,59 @@ Each round:
 - **Strict evaluation** — Evaluator applies high standards with severity grading (Critical/Major/Minor). Standards only go up, never down.
 - **Smart stopping** — Configurable limits: max rounds, consecutive fail/skip/discard thresholds. No pointless spinning.
 
+## Install as Claude Code Skill
+
+Once installed, use `/autoloop` in any project to launch with one command.
+
+### Install
+
+Clone this repo, then run:
+
+```bash
+# Clone the repo
+git clone https://github.com/wujian/autoloop.git
+cd autoloop
+
+# Create skill directory and copy files
+mkdir -p ~/.claude/skills/autoloop/templates
+cp skill/SKILL.md ~/.claude/skills/autoloop/SKILL.md
+cp templates/* ~/.claude/skills/autoloop/templates/
+```
+
+After installation, restart Claude Code. Type `/autoloop` in any Git repository to use it.
+
+### Uninstall
+
+```bash
+rm -rf ~/.claude/skills/autoloop
+```
+
+Restart Claude Code to take effect.
+
+### Verify Installation
+
+In Claude Code, type:
+
+```
+/autoloop
+```
+
+If you see an interactive guide (asking about role, task objective, etc.), the installation is successful.
+
 ## Quick Start
 
-### 1. Prepare your workspace
+Two ways to use autoloop: **via Skill** (recommended) or **manual template copy**.
+
+### Option 1: Via Skill (Recommended)
+
+1. Install the skill as described above
+2. Open Claude Code in your project directory (Git repository)
+3. Type `/autoloop` and follow the interactive guide
+4. The loop starts automatically
+
+### Option 2: Manual Template Copy
+
+#### 1. Prepare your workspace
 
 In your project root (a Git repository), copy the template files:
 
@@ -61,7 +111,7 @@ cp autoloop/templates/generator.md  ./
 cp autoloop/templates/evaluator.md  ./
 ```
 
-### 2. Write config.md
+#### 2. Write config.md
 
 Use `templates/config.md` or `examples/` as a reference to create your config:
 
@@ -83,18 +133,12 @@ evaluation_methods:
   - read_files: true
 ```
 
-### 3. Launch
+#### 3. Launch
 
 In Claude Code:
 
 ```
 Read program.md and start Setup
-```
-
-Or if you have the autoloop skill installed:
-
-```
-/autoloop
 ```
 
 The Dispatcher will guide you through initialization, then the loop runs automatically.
