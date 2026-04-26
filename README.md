@@ -28,7 +28,7 @@ autoloop 是一套通用的三角分工自主循环框架，灵感来自 Karpath
                             │
                      ┌──────┴──────┐
                      │  目标文件    │
-                     │  (你的代码)  │
+                     │  (你的产出)  │
                      └─────────────┘
 ```
 
@@ -55,38 +55,37 @@ autoloop 是一套通用的三角分工自主循环框架，灵感来自 Karpath
 
 ### 安装
 
-将本仓库克隆到本地，然后执行：
+将以下 prompt 粘贴到 Claude Code 中执行：
 
-```bash
-# 克隆仓库
-git clone https://github.com/wujian/autoloop.git
-cd autoloop
-
-# 创建 skill 目录并复制文件
-mkdir -p ~/.claude/skills/autoloop/templates
-cp skill/SKILL.md ~/.claude/skills/autoloop/SKILL.md
-cp templates/* ~/.claude/skills/autoloop/templates/
+```
+请帮我安装 autoloop skill。执行以下步骤：
+1. 运行 git clone https://github.com/wujian/autoloop.git /tmp/autoloop-install
+2. 运行 mkdir -p ~/.claude/skills/autoloop/templates
+3. 运行 cp /tmp/autoloop-install/skill/SKILL.md ~/.claude/skills/autoloop/SKILL.md
+4. 运行 cp /tmp/autoloop-install/templates/* ~/.claude/skills/autoloop/templates/
+5. 运行 rm -rf /tmp/autoloop-install
+6. 验证安装：运行 ls ~/.claude/skills/autoloop/SKILL.md ~/.claude/skills/autoloop/templates/ 确认文件存在
+安装完成后告诉我结果。
 ```
 
 安装完成后，重启 Claude Code，在任意 Git 仓库中输入 `/autoloop` 即可使用。
 
 ### 卸载
 
-```bash
-rm -rf ~/.claude/skills/autoloop
+将以下 prompt 粘贴到 Claude Code 中执行：
+
+```
+请帮我卸载 autoloop skill。执行以下步骤：
+1. 运行 rm -rf ~/.claude/skills/autoloop
+2. 验证卸载：运行 ls ~/.claude/skills/autoloop 2>&1 确认目录已删除
+卸载完成后告诉我结果。
 ```
 
 重启 Claude Code 即生效。
 
 ### 验证安装
 
-在 Claude Code 中输入：
-
-```
-/autoloop
-```
-
-如果看到交互式引导（询问角色、任务目标等），说明安装成功。
+在 Claude Code 中输入 `/autoloop`。如果看到交互式引导（询问角色、任务目标等），说明安装成功。
 
 ## Quick Start
 

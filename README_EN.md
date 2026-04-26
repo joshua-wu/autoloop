@@ -55,38 +55,37 @@ Once installed, use `/autoloop` in any project to launch with one command.
 
 ### Install
 
-Clone this repo, then run:
+Paste the following prompt into Claude Code:
 
-```bash
-# Clone the repo
-git clone https://github.com/wujian/autoloop.git
-cd autoloop
-
-# Create skill directory and copy files
-mkdir -p ~/.claude/skills/autoloop/templates
-cp skill/SKILL.md ~/.claude/skills/autoloop/SKILL.md
-cp templates/* ~/.claude/skills/autoloop/templates/
+```
+Please install the autoloop skill. Execute these steps:
+1. Run git clone https://github.com/wujian/autoloop.git /tmp/autoloop-install
+2. Run mkdir -p ~/.claude/skills/autoloop/templates
+3. Run cp /tmp/autoloop-install/skill/SKILL.md ~/.claude/skills/autoloop/SKILL.md
+4. Run cp /tmp/autoloop-install/templates/* ~/.claude/skills/autoloop/templates/
+5. Run rm -rf /tmp/autoloop-install
+6. Verify: run ls ~/.claude/skills/autoloop/SKILL.md ~/.claude/skills/autoloop/templates/ to confirm files exist
+Tell me the result when done.
 ```
 
 After installation, restart Claude Code. Type `/autoloop` in any Git repository to use it.
 
 ### Uninstall
 
-```bash
-rm -rf ~/.claude/skills/autoloop
+Paste the following prompt into Claude Code:
+
+```
+Please uninstall the autoloop skill. Execute these steps:
+1. Run rm -rf ~/.claude/skills/autoloop
+2. Verify: run ls ~/.claude/skills/autoloop 2>&1 to confirm the directory is deleted
+Tell me the result when done.
 ```
 
 Restart Claude Code to take effect.
 
 ### Verify Installation
 
-In Claude Code, type:
-
-```
-/autoloop
-```
-
-If you see an interactive guide (asking about role, task objective, etc.), the installation is successful.
+Type `/autoloop` in Claude Code. If you see an interactive guide (asking about role, task objective, etc.), the installation is successful.
 
 ## Quick Start
 
