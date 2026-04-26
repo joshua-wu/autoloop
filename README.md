@@ -61,7 +61,7 @@ autoloop 是一套通用的三角分工自主循环框架，灵感来自 Karpath
 请帮我安装 autoloop skill。执行以下步骤：
 1. 运行 git clone https://github.com/joshua-wu/autoloop.git /tmp/autoloop-install
 2. 运行 mkdir -p ~/.claude/skills/autoloop/templates
-3. 运行 cp /tmp/autoloop-install/skill/SKILL.md ~/.claude/skills/autoloop/SKILL.md
+3. 运行 cp /tmp/autoloop-install/SKILL.md ~/.claude/skills/autoloop/SKILL.md
 4. 运行 cp /tmp/autoloop-install/templates/* ~/.claude/skills/autoloop/templates/
 5. 运行 rm -rf /tmp/autoloop-install
 6. 验证安装：运行 ls ~/.claude/skills/autoloop/SKILL.md ~/.claude/skills/autoloop/templates/ 确认文件存在
@@ -182,8 +182,7 @@ autoloop/
     generator.md       ← 生成器指令
     evaluator.md       ← 评估器指令
     config.md          ← 配置模板
-  skill/               ← Claude Code skill（可选）
-    SKILL.md           ← /autoloop 命令入口
+  SKILL.md             ← Claude Code skill 入口（可选）
   examples/            ← 使用示例
     ml-research.md     ← ML 实验配置
     doc-optimization.md← 文档优化配置

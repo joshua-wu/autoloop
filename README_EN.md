@@ -61,7 +61,7 @@ Paste the following prompt into Claude Code:
 Please install the autoloop skill. Execute these steps:
 1. Run git clone https://github.com/joshua-wu/autoloop.git /tmp/autoloop-install
 2. Run mkdir -p ~/.claude/skills/autoloop/templates
-3. Run cp /tmp/autoloop-install/skill/SKILL.md ~/.claude/skills/autoloop/SKILL.md
+3. Run cp /tmp/autoloop-install/SKILL.md ~/.claude/skills/autoloop/SKILL.md
 4. Run cp /tmp/autoloop-install/templates/* ~/.claude/skills/autoloop/templates/
 5. Run rm -rf /tmp/autoloop-install
 6. Verify: run ls ~/.claude/skills/autoloop/SKILL.md ~/.claude/skills/autoloop/templates/ to confirm files exist
@@ -182,8 +182,7 @@ autoloop/
     generator.md       ← Generator instructions
     evaluator.md       ← Evaluator instructions
     config.md          ← Config template
-  skill/               ← Claude Code skill (optional)
-    SKILL.md           ← /autoloop command entry point
+  SKILL.md             ← Claude Code skill entry point (optional)
   examples/            ← Usage examples
     ml-research.md     ← ML experiment config
     doc-optimization.md← Doc optimization config
