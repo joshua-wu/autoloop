@@ -59,7 +59,7 @@ autoloop 是一套通用的三角分工自主循环框架，灵感来自 Karpath
 
 ```
 请帮我安装 autoloop skill。执行以下步骤：
-1. 运行 git clone https://github.com/wujian/autoloop.git /tmp/autoloop-install
+1. 运行 git clone https://github.com/joshua-wu/autoloop.git /tmp/autoloop-install
 2. 运行 mkdir -p ~/.claude/skills/autoloop/templates
 3. 运行 cp /tmp/autoloop-install/skill/SKILL.md ~/.claude/skills/autoloop/SKILL.md
 4. 运行 cp /tmp/autoloop-install/templates/* ~/.claude/skills/autoloop/templates/

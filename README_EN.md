@@ -59,7 +59,7 @@ Paste the following prompt into Claude Code:
 
 ```
 Please install the autoloop skill. Execute these steps:
-1. Run git clone https://github.com/wujian/autoloop.git /tmp/autoloop-install
+1. Run git clone https://github.com/joshua-wu/autoloop.git /tmp/autoloop-install
 2. Run mkdir -p ~/.claude/skills/autoloop/templates
 3. Run cp /tmp/autoloop-install/skill/SKILL.md ~/.claude/skills/autoloop/SKILL.md
 4. Run cp /tmp/autoloop-install/templates/* ~/.claude/skills/autoloop/templates/
