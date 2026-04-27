@@ -302,18 +302,26 @@ JSONL 格式的优势：
 
 | phase | 含义 | 恢复方式 |
 |-------|------|---------|
-| `generator_running` | 生成器正在运行 | 生成器可能改了一半。清理残留 worktree，本轮算 fail，从下一轮重新开始 |
-| `evaluator_running` | 评估器正在运行 | 评估可能写了一半。检查 `_run/evaluator/eval/round_NNN.md` 是否存在且完整；不完整则删除，本轮算 fail |
-| `deciding` | 评估完成，待决策 | 评估报告已完成。读取评估报告，重新执行决策逻辑 |
-| `recording` | 已决策，待记录 | merge 可能已执行。检查 git log 确认 merge 状态，补写 `_run/dispatcher/results.jsonl` |
+| `generator_running` | 生成器正在运行 | 清理残留 worktree（见下方清理步骤），本轮算 fail，进入下一轮 |
+| `evaluator_running` | 评估器正在运行 | 清理残留 worktree。检查 `_run/evaluator/eval/round_NNN.md` 是否存在——若不存在则本轮算 fail；若存在则视为评估已完成（即使内容可能不完整），进入 deciding 阶段重新决策 |
+| `deciding` | 评估完成，待决策 | 读取评估报告，重新执行 Step 4 决策逻辑 |
+| `recording` | 已决策，待记录 | 检查 `_run/dispatcher/results.jsonl` 最后一行的 round 字段是否等于当前轮次：若已记录则跳过；若未记录则检查 git log 中是否有 `generator_branch` 的 merge commit 来判断 keep/discard，补写记录 |
 | `complete` | 本轮完成 | 直接进入下一轮 |
 
 **恢复流程**（在 Step 1 恢复上下文时执行）：
 
-1. 检查 `_run/dispatcher/state.json` 是否存在
-2. 如果不存在 → 正常启动，从 `_run/dispatcher/results.jsonl` 行数推断轮次编号
-3. 如果存在 → 读取 phase，按上表执行恢复策略
-4. 恢复完成后，更新 `_run/dispatcher/state.json` 为 `complete`，进入下一轮
+1. **清理残留 worktree**（每次恢复必须执行）：
+   ```bash
+   git worktree list
+   ```
+   如果列表中有非主 worktree 的条目，执行 `git worktree remove <path> --force` 逐个清理。
+
+2. 检查 `_run/dispatcher/state.json` 是否存在
+3. 如果不存在 → 正常启动，从 `_run/dispatcher/results.jsonl` 行数推断轮次编号
+4. 如果存在 → 读取 phase，按上表执行恢复策略
+5. 恢复完成后，更新 `_run/dispatcher/state.json` 为 `complete`，进入下一轮
+
+**连续计数器恢复**：连续 discard/fail/skip 计数不存储在 state.json 中，每次恢复时从 `_run/dispatcher/results.jsonl` 尾部重新计算——从最后一行往前扫描，直到遇到不同 status 为止，即为当前连续计数。
 
 **状态更新时机**（在 Main Loop 中）：
 
