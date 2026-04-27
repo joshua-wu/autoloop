@@ -40,6 +40,12 @@ evaluation_methods:
   - read_files: true
   - compare_source: true
 
+## Critical Rules (质量底线)
+# 违反任何一条即标记为 Critical，强烈倾向 discard
+critical_rules:
+  - "不得引入已通过测试的回归"
+  - "不得删除已有功能"
+
 ## History
 history_window: 40              # 只传最近 N 轮的 summary 给 subagent
 summary_max_bytes: 500          # 每轮 summary 摘要的上限（字节）
