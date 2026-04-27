@@ -29,7 +29,7 @@ AutoLoop 是一套三角分工（调度器+生成器+评估器）的自主循环
 ```
 当前目录不是 Git 仓库根目录？
   → 询问用户："当前目录不是 Git 仓库根目录，是否自动初始化？（git init）"
-  → 用户同意 → 执行 git init + 创建 .gitignore（含 .run/、run.log）
+  → 用户同意 → 执行 git init + 创建 .gitignore（含 _run/、run.log）
   → 用户拒绝 → 提示"AutoLoop 需要独立的 Git 仓库来管理版本，请在仓库根目录或新目录中运行"，退出
 
 是 Git 仓库根目录 + 有 autoloop-version 标记 → 走"恢复/继续"路径
@@ -90,13 +90,13 @@ AutoLoop 是一套三角分工（调度器+生成器+评估器）的自主循环
 
 从 `program.md` 头部提取版本号，与 skill 内置版本（1.0.0）对比：
 - **匹配** → 继续
-- **不匹配** → 告诉用户："模板文件版本为 vX.X.X，当前 skill 版本为 v1.0.0。是否要更新模板文件？（config.md 和 .run/ 目录会保留）"
-  - 用户同意 → 重新写入 program.md、generator.md、evaluator.md（保留 config.md 和 .run/）
+- **不匹配** → 告诉用户："模板文件版本为 vX.X.X，当前 skill 版本为 v1.0.0。是否要更新模板文件？（config.md 和 _run/ 目录会保留）"
+  - 用户同意 → 重新写入 program.md、generator.md、evaluator.md（保留 config.md 和 _run/）
   - 用户拒绝 → 使用当前文件继续
 
 ### Step 2：状态检查
 
-检查 `.run/dispatcher/state.json` 是否存在：
+检查 `_run/dispatcher/state.json` 是否存在：
 - **存在** → 告诉用户"检测到上次中断的进度（第 N 轮，phase: XXX），将从中断处恢复"
 - **不存在** → 告诉用户"将开始新的循环"
 
@@ -111,7 +111,7 @@ AutoLoop 是一套三角分工（调度器+生成器+评估器）的自主循环
 如果用户明确要求更新模板（如"更新 autoloop 模板"、"升级模板"）：
 
 1. 从 `templates/` 重新写入 `program.md`、`generator.md`、`evaluator.md`（带新版本号）
-2. **保留** `config.md` 和 `.run/` 目录（不丢失用户配置和历史）
+2. **保留** `config.md` 和 `_run/` 目录（不丢失用户配置和历史）
 3. 告诉用户"模板已更新到 v1.0.0，config.md 和历史记录已保留"
 
 ---

@@ -18,11 +18,11 @@
 - 修改 `readonly_files` 中的任何文件。
 - 修改 `config.md`、`program.md`、`generator.md`、`evaluator.md`。
 - 安装新依赖、修改项目配置文件。
-- 修改评估相关的任何内容（`.run/evaluator/` 目录、`.run/dispatcher/results.jsonl`）。
+- 修改评估相关的任何内容（`_run/evaluator/` 目录、`_run/dispatcher/results.jsonl`）。
 
 ## 工作流程
 
-1. **阅读任务要求**：首先阅读 `.run/generator/task.md`。这是调度器在首次 Setup 时根据任务特点为你生成的专属任务要求，包含：
+1. **阅读任务要求**：首先阅读 `_run/generator/task.md`。这是调度器在首次 Setup 时根据任务特点为你生成的专属任务要求，包含：
    - 你的角色和目标的具体展开
    - 目标文件的当前状态摘要
    - 参考文件中需遵守的关键约束
@@ -31,19 +31,19 @@
 
 2. **阅读配置**：理解 `config.md` 中的任务目标、约束和 `generator_strategy`。
 
-3. **阅读自己的历史**：调度器会在 prompt 中给你 `.run/generator/gen/summary.md`——这是你自己之前每轮写下的生成摘要。通过它你可以：
+3. **阅读自己的历史**：调度器会在 prompt 中给你 `_run/generator/gen/summary.md`——这是你自己之前每轮写下的生成摘要。通过它你可以：
    - 延续之前的思路（"上轮我开始补参数文档，还剩 3 个没补"）
    - 避免重复同样的改动
    - 回顾自己之前的分析和计划
 
 4. **阅读评估历史和结果**：调度器还会给你：
-   - `.run/evaluator/eval/summary.md` — 所有轮次的评估摘要（发现过什么问题、哪些被修复了）
-   - `.run/dispatcher/results.jsonl` — 所有轮次的结果记录（尝试过什么方向、keep 还是 discard）
+   - `_run/evaluator/eval/summary.md` — 所有轮次的评估摘要（发现过什么问题、哪些被修复了）
+   - `_run/dispatcher/results.jsonl` — 所有轮次的结果记录（尝试过什么方向、keep 还是 discard）
 
    **重要**：不要重复尝试 `results.jsonl` 中已记录为 discard 或 fail 的方向。如果一个方向之前失败了，要么换一个完全不同的方向，要么找到之前失败的根因后用不同的方式再试。
 
    根据历史决定本轮方向：
-   - 如果是第一轮（没有历史），参考 `.run/generator/task.md` 中的方向指引选择改进方向。
+   - 如果是第一轮（没有历史），参考 `_run/generator/task.md` 中的方向指引选择改进方向。
    - 如果有历史，优先解决评估器最近一轮指出的问题，同时延续自己 gen/summary.md 中的思路。
    - 如果最近连续多轮 discard，说明当前方向走不通，换一个完全不同的方向。
 
@@ -69,13 +69,13 @@
 
 8. **写生成记录**：将本轮的详细记录写入 main worktree：
 
-   - 写 `<main_worktree>/.run/generator/gen/round_NNN.md`（详细记录），包含：
+   - 写 `<main_worktree>/_run/generator/gen/round_NNN.md`（详细记录），包含：
      - 本轮的分析和思考过程
      - 具体改了什么文件的什么内容
      - 为什么选这个方向
      - 下一轮的计划或思路（如果有）
 
-   - 追加到 `<main_worktree>/.run/generator/gen/summary.md`：
+   - 追加到 `<main_worktree>/_run/generator/gen/summary.md`：
      ```markdown
      ## Round NNN
 
@@ -86,7 +86,7 @@
 
    使用 Bash 的 `echo` 或 Edit 工具追加 summary，不要覆盖已有内容。
 
-   如果需要回顾某一轮的完整细节，可以读取对应的 `.run/generator/gen/round_NNN.md`。
+   如果需要回顾某一轮的完整细节，可以读取对应的 `_run/generator/gen/round_NNN.md`。
 
 9. **返回消息**：在返回消息中说明：
    - 你做了什么改动

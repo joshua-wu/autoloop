@@ -13,23 +13,23 @@
 
 调度器会在 prompt 中提供：
 - `config.md` 的内容（任务配置，包含 `evaluator_depth` 和 `evaluator_prefix`）
-- `.run/evaluator/eval/summary.md` 的内容（历史评估摘要）
+- `_run/evaluator/eval/summary.md` 的内容（历史评估摘要）
 - main worktree 的绝对路径
 - 当前轮次编号 N
 
 ### Step 0：阅读任务要求
 
-首先阅读 `.run/evaluator/task.md`。这是调度器在首次 Setup 时根据任务特点为你生成的专属任务要求，包含：
+首先阅读 `_run/evaluator/task.md`。这是调度器在首次 Setup 时根据任务特点为你生成的专属任务要求，包含：
 - 评估维度定义（"好"和"差"的具体标准）
 - 评估命令的预期输出解读
 - 各评估维度的权重或优先级
 - `evaluator_depth` 的具体解读
 
-你的所有评估行为必须以 `.run/evaluator/task.md` 中定义的标准为准。
+你的所有评估行为必须以 `_run/evaluator/task.md` 中定义的标准为准。
 
 ### Step 1：自主获取信息
 
-根据 `.run/evaluator/task.md` 中的评估标准和 `config.md` 中 `evaluation_methods` 定义的手段，自主决定评估策略：
+根据 `_run/evaluator/task.md` 中的评估标准和 `config.md` 中 `evaluation_methods` 定义的手段，自主决定评估策略：
 
 **evaluator_depth 指导**：
 - **`quantitative`**：侧重执行命令、收集数值指标。快速精确，关注数字变化。
@@ -44,7 +44,7 @@
 
 ### Step 2：对比历史
 
-阅读 `.run/evaluator/eval/summary.md` 中的历史评估摘要：
+阅读 `_run/evaluator/eval/summary.md` 中的历史评估摘要：
 - 上一轮报告了哪些问题？
 - 这些问题现在解决了吗？
 - 有没有新出现的问题？
@@ -52,7 +52,7 @@
 
 ### Step 3：写详细评估报告
 
-写入 `<main_worktree_path>/.run/evaluator/eval/round_NNN.md`（NNN 是轮次编号，左补零到 3 位）。
+写入 `<main_worktree_path>/_run/evaluator/eval/round_NNN.md`（NNN 是轮次编号，左补零到 3 位）。
 
 报告是自由格式的，但必须覆盖以下内容：
 - 当前状态的整体评价
@@ -62,7 +62,7 @@
 
 ### Step 4：追加摘要
 
-追加到 `<main_worktree_path>/.run/evaluator/eval/summary.md`：
+追加到 `<main_worktree_path>/_run/evaluator/eval/summary.md`：
 
 ```markdown
 ## Round NNN
@@ -74,7 +74,7 @@
 
 使用 Bash 的 `echo` 或 Edit 工具来追加，不要覆盖已有内容。
 
-如果后续轮次需要回顾某一轮的完整评估，可以读取对应的 `.run/evaluator/eval/round_NNN.md`。
+如果后续轮次需要回顾某一轮的完整评估，可以读取对应的 `_run/evaluator/eval/round_NNN.md`。
 
 ### Step 5：返回消息
 
@@ -84,13 +84,13 @@
 
 - 执行 `config.md` 中 `evaluation_methods` 定义的命令。
 - 阅读 `target_files` 和 `readonly_files` 中的文件。
-- 在 main worktree 的 `.run/evaluator/eval/` 目录下写入评估产物。
+- 在 main worktree 的 `_run/evaluator/eval/` 目录下写入评估产物。
 
 ## 你不能做什么
 
 - 修改任何目标文件（`target_files`）。
 - 修改 `config.md`、`program.md`、`generator.md`、`evaluator.md`。
-- 修改 `.run/dispatcher/results.jsonl`（这是调度器的职责）。
+- 修改 `_run/dispatcher/results.jsonl`（这是调度器的职责）。
 - 给出"接下来应该做什么"的建议。
 
 ## 评估标准

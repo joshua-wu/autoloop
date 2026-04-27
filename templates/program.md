@@ -11,33 +11,33 @@
 2. **确认 run tag**：提议一个标签（如 `apr25`），创建分支 `<branch_prefix>/<tag>`。
 3. **阅读上下文**：读取 `config.md` 中 `context` 列出的所有文件。
 4. **初始化工作空间**：
-   - 创建 `.run/` 目录及子目录结构：
+   - 创建 `_run/` 目录及子目录结构：
      ```
-     .run/
+     _run/
        dispatcher/
        generator/
          gen/
        evaluator/
          eval/
      ```
-   - 创建 `.run/generator/gen/summary.md`，写入标题行。
-   - 创建 `.run/evaluator/eval/summary.md`，写入标题行。
-   - 创建 `.run/dispatcher/results.jsonl`，写入空文件。
-   - 创建 `.run/dispatcher/state.json`，写入初始状态。
-   - 将 `.run/` 加入 `.gitignore`（所有运行时产物不受 git 管理）：
+   - 创建 `_run/generator/gen/summary.md`，写入标题行。
+   - 创建 `_run/evaluator/eval/summary.md`，写入标题行。
+   - 创建 `_run/dispatcher/results.jsonl`，写入空文件。
+   - 创建 `_run/dispatcher/state.json`，写入初始状态。
+   - 将 `_run/` 加入 `.gitignore`（所有运行时产物不受 git 管理）：
      ```
-     .run/
+     _run/
      run.log
      ```
    - 读取 `config.md` 中的 `dispatcher_prefix`、`generator_prefix`、`evaluator_prefix`，后续所有 git commit 使用对应前缀。
 5. **生成任务 prompt**：根据 `config.md` 的内容，结合 `generator.md` 和 `evaluator.md` 的通用指令，为本次任务生成两个专属的任务 prompt 文件：
-   - `.run/generator/task.md` — 生成器的专属任务要求。包含：
+   - `_run/generator/task.md` — 生成器的专属任务要求。包含：
      - 角色定义（从 `config.md` 的 `role` 和 `task` 展开为具体描述）
      - 目标文件的当前状态摘要（读取 `target_files` 后提炼关键信息）
      - 参考文件的关键约束（读取 `readonly_files` 后提炼需遵守的规则/事实）
      - 针对本任务的改进方向指引（根据任务性质给出初始方向）
      - `generator_strategy` 的具体解读（结合任务说明为什么选这个策略）
-   - `.run/evaluator/task.md` — 评估器的专属任务要求。包含：
+   - `_run/evaluator/task.md` — 评估器的专属任务要求。包含：
      - 评估维度定义（根据任务目标，明确"好"和"差"的具体标准）
      - 评估命令的预期输出解读（每条 `evaluation_methods` 的输出意味着什么）
      - 各评估维度的权重或优先级（哪些问题严重，哪些可以容忍）
@@ -53,7 +53,7 @@
      evaluator.md                          ← 评估器通用指令（通用模板）
      [target_files]                        ← 被生成器修改的目标文件
      [readonly_files]                      ← 只读参考文件
-     .run/                                 ← [自动生成] 运行时产物（.gitignore）
+     _run/                                 ← [自动生成] 运行时产物（.gitignore）
        dispatcher/                         ← 调度器产物
          state.json                        ← 当前轮次状态（中断恢复）
          results.jsonl                      ← 结构化结果记录
@@ -82,12 +82,12 @@
 
 每一轮开始时，重新读取以下文件恢复状态（不依赖对话记忆）：
 - `config.md` — 任务配置
-- `.run/generator/gen/summary.md` — 所有历史生成摘要
-- `.run/evaluator/eval/summary.md` — 所有历史评估摘要
-- `.run/dispatcher/results.jsonl` — 所有历史结果
-- `.run/dispatcher/state.json` — 当前轮次状态
+- `_run/generator/gen/summary.md` — 所有历史生成摘要
+- `_run/evaluator/eval/summary.md` — 所有历史评估摘要
+- `_run/dispatcher/results.jsonl` — 所有历史结果
+- `_run/dispatcher/state.json` — 当前轮次状态
 
-确定当前轮次编号 N（= `.run/dispatcher/results.jsonl` 行数）。
+确定当前轮次编号 N（= `_run/dispatcher/results.jsonl` 行数）。
 
 ### Step 2：调用生成器
 
@@ -104,14 +104,14 @@ Agent({
 
 生成器 prompt 必须包含：
 - `generator.md` 的完整内容
-- `.run/generator/task.md` 的完整内容（首次 Setup 时生成的专属任务要求）
+- `_run/generator/task.md` 的完整内容（首次 Setup 时生成的专属任务要求）
 - `config.md` 的完整内容（包含 `generator_strategy` 和 `generator_prefix`）
-- `.run/generator/gen/summary.md` 的完整内容（生成器自己的历史摘要，延续之前的思路）
-- `.run/evaluator/eval/summary.md` 的完整内容（所有历史评估摘要，让生成器知道之前发现过什么问题）
-- `.run/dispatcher/results.jsonl` 的完整内容（所有历史结果，让生成器知道之前尝试过什么、成功还是失败）
-- 当前 main worktree 的绝对路径（生成器将生成记录写到这里的 `.run/generator/gen/`）
+- `_run/generator/gen/summary.md` 的完整内容（生成器自己的历史摘要，延续之前的思路）
+- `_run/evaluator/eval/summary.md` 的完整内容（所有历史评估摘要，让生成器知道之前发现过什么问题）
+- `_run/dispatcher/results.jsonl` 的完整内容（所有历史结果，让生成器知道之前尝试过什么、成功还是失败）
+- 当前 main worktree 的绝对路径（生成器将生成记录写到这里的 `_run/generator/gen/`）
 - 当前轮次编号 N
-- 明确指令："先阅读 `.run/generator/task.md` 理解本任务的具体要求，然后修改目标文件，git commit 使用 `generator_prefix` 前缀。完成后写详细记录到 `.run/generator/gen/round_NNN.md` 并追加摘要到 `.run/generator/gen/summary.md`。注意不要重复尝试 results.jsonl 中已记录为 discard 或 fail 的方向。"
+- 明确指令："先阅读 `_run/generator/task.md` 理解本任务的具体要求，然后修改目标文件，git commit 使用 `generator_prefix` 前缀。完成后写详细记录到 `_run/generator/gen/round_NNN.md` 并追加摘要到 `_run/generator/gen/summary.md`。注意不要重复尝试 results.jsonl 中已记录为 discard 或 fail 的方向。"
 
 记录生成器返回的 worktree path 和 branch name。
 
@@ -147,18 +147,18 @@ Agent({
 
 评估器 prompt 必须包含：
 - `evaluator.md` 的完整内容
-- `.run/evaluator/task.md` 的完整内容（首次 Setup 时生成的专属任务要求）
+- `_run/evaluator/task.md` 的完整内容（首次 Setup 时生成的专属任务要求）
 - `config.md` 的完整内容（包含 `evaluator_depth`、`evaluator_prefix` 和 `evaluation_methods`）
-- `.run/evaluator/eval/summary.md` 的完整内容（历史评估摘要）
-- 当前 main worktree 的绝对路径（评估器将评估产物写到这里的 `.run/evaluator/eval/`）
+- `_run/evaluator/eval/summary.md` 的完整内容（历史评估摘要）
+- 当前 main worktree 的绝对路径（评估器将评估产物写到这里的 `_run/evaluator/eval/`）
 - 当前轮次编号 N
-- 明确指令："先阅读 `.run/evaluator/task.md` 理解本任务的评估标准，然后评估当前状态，输出问题清单，commit 消息使用 `evaluator_prefix` 前缀"
+- 明确指令："先阅读 `_run/evaluator/task.md` 理解本任务的评估标准，然后评估当前状态，输出问题清单，commit 消息使用 `evaluator_prefix` 前缀"
 
 **重要**：评估器的 worktree 必须基于生成器的 branch，这样它能看到生成器的改动。如果 Claude Code 的 isolation: "worktree" 不支持指定 base branch，则在 prompt 中指示评估器执行 `git merge <generator-branch>` 后再开始评估。
 
 评估器完成后：
-- `.run/evaluator/eval/round_NNN.md` 已写好（在 main worktree 下）
-- `.run/evaluator/eval/summary.md` 已追加本轮摘要
+- `_run/evaluator/eval/round_NNN.md` 已写好（在 main worktree 下）
+- `_run/evaluator/eval/summary.md` 已追加本轮摘要
 - 返回消息中包含核心发现
 
 ### Step 4：决策
@@ -184,10 +184,10 @@ Agent({
 
 ### Step 5：记录
 
-追加一行 JSON 到 `.run/dispatcher/results.jsonl`（每行一个 JSON 对象，直接 `echo >>` 追加）：
+追加一行 JSON 到 `_run/dispatcher/results.jsonl`（每行一个 JSON 对象，直接 `echo >>` 追加）：
 
 ```bash
-echo '{"round":5,"commit":"a1b2c3d","status":"keep","description":"补充 /users 接口的请求参数说明"}' >> .run/dispatcher/results.jsonl
+echo '{"round":5,"commit":"a1b2c3d","status":"keep","description":"补充 /users 接口的请求参数说明"}' >> _run/dispatcher/results.jsonl
 ```
 
 字段说明：
@@ -254,12 +254,12 @@ JSONL 格式的优势：
 ### 方向调整
 
 - 如果连续 3 轮 discard（未触发停止条件），换一个完全不同的方向，不要在同一条路上反复尝试。
-- 如果没有改进思路，回顾 `.run/evaluator/eval/summary.md` 的历史，寻找反复出现但未解决的问题。
+- 如果没有改进思路，回顾 `_run/evaluator/eval/summary.md` 的历史，寻找反复出现但未解决的问题。
 
 ## Claude Code Adaptation
 
 ### 状态持久化
-- 所有跨轮次状态通过文件传递（`.run/evaluator/eval/summary.md`、`.run/dispatcher/results.jsonl`）。
+- 所有跨轮次状态通过文件传递（`_run/evaluator/eval/summary.md`、`_run/dispatcher/results.jsonl`）。
 - 绝不依赖对话记忆。每轮开始都重新读文件。
 
 ### Subagent 调用
@@ -277,7 +277,7 @@ JSONL 格式的优势：
 
 任务可能在任何阶段被中断。通过 `state.json` 状态文件实现精确恢复。
 
-**state.json 结构**（位于 `.run/dispatcher/state.json`）：
+**state.json 结构**（位于 `_run/dispatcher/state.json`）：
 ```json
 {
   "round": 5,
@@ -292,17 +292,17 @@ JSONL 格式的优势：
 | phase | 含义 | 恢复方式 |
 |-------|------|---------|
 | `generator_running` | 生成器正在运行 | 生成器可能改了一半。清理残留 worktree，本轮算 fail，从下一轮重新开始 |
-| `evaluator_running` | 评估器正在运行 | 评估可能写了一半。检查 `.run/evaluator/eval/round_NNN.md` 是否存在且完整；不完整则删除，本轮算 fail |
+| `evaluator_running` | 评估器正在运行 | 评估可能写了一半。检查 `_run/evaluator/eval/round_NNN.md` 是否存在且完整；不完整则删除，本轮算 fail |
 | `deciding` | 评估完成，待决策 | 评估报告已完成。读取评估报告，重新执行决策逻辑 |
-| `recording` | 已决策，待记录 | merge 可能已执行。检查 git log 确认 merge 状态，补写 `.run/dispatcher/results.jsonl` |
+| `recording` | 已决策，待记录 | merge 可能已执行。检查 git log 确认 merge 状态，补写 `_run/dispatcher/results.jsonl` |
 | `complete` | 本轮完成 | 直接进入下一轮 |
 
 **恢复流程**（在 Step 1 恢复上下文时执行）：
 
-1. 检查 `.run/dispatcher/state.json` 是否存在
-2. 如果不存在 → 正常启动，从 `.run/dispatcher/results.jsonl` 行数推断轮次编号
+1. 检查 `_run/dispatcher/state.json` 是否存在
+2. 如果不存在 → 正常启动，从 `_run/dispatcher/results.jsonl` 行数推断轮次编号
 3. 如果存在 → 读取 phase，按上表执行恢复策略
-4. 恢复完成后，更新 `.run/dispatcher/state.json` 为 `complete`，进入下一轮
+4. 恢复完成后，更新 `_run/dispatcher/state.json` 为 `complete`，进入下一轮
 
 **状态更新时机**（在 Main Loop 中）：
 
@@ -313,7 +313,7 @@ JSONL 格式的优势：
 - Step 5 完成后 → 写入 `{"phase": "complete", ...}`
 
 **其他恢复数据源**（作为 state.json 的补充验证）：
-- `.run/dispatcher/results.jsonl` → 已完成的轮次和结果
-- `.run/evaluator/eval/summary.md` → 评估历史
+- `_run/dispatcher/results.jsonl` → 已完成的轮次和结果
+- `_run/evaluator/eval/summary.md` → 评估历史
 - `git log` → 当前分支的 commit 历史
 - `git worktree list` → 是否有残留 worktree 需要清理

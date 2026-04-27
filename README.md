@@ -193,7 +193,7 @@ autoloop/
 循环启动后自动生成（已加入 `.gitignore`）：
 
 ```
-.run/
+_run/
   dispatcher/
     state.json         ← 当前状态（中断恢复）
     results.jsonl      ← 所有轮次结果

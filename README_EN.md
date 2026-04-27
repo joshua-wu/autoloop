@@ -193,7 +193,7 @@ autoloop/
 Auto-generated when the loop starts (gitignored):
 
 ```
-.run/
+_run/
   dispatcher/
     state.json         ← Current state (crash recovery)
     results.jsonl      ← All round results
