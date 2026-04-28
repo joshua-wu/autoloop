@@ -186,25 +186,26 @@ Agent({
 - **fail**：生成器或评估器执行出错。
   执行：什么都不做。记录错误信息。
 
-判定原则：
-- 评估器报告的问题比上一轮少 → 倾向 keep
-- 评估器报告没有改善甚至退步 → discard
-- 有新的严重问题出现 → discard
-- 问题数量持平但整体质量有定性提升（评估器的文字描述） → 可以 keep
-- 拿不准时 → discard（保守策略）
+判定原则（基于评估器的 100 分制评分）：
+- 本轮分数 > 上轮分数 → **keep**（改进有效）
+- 本轮分数 = 上轮分数，但解决了旧问题（即使引入了同等数量的新问题）→ 可以 **keep**
+- 本轮分数 < 上轮分数 → **discard**（退步了）
+- 存在新增 Critical 问题 → **discard**（无论分数变化）
+- 拿不准时 → **discard**（保守策略）
 
 ### Step 5：记录
 
 追加一行 JSON 到 `_run/dispatcher/results.jsonl`（每行一个 JSON 对象，直接 `echo >>` 追加）：
 
 ```bash
-echo '{"round":5,"commit":"a1b2c3d","status":"keep","description":"补充 /users 接口的请求参数说明"}' >> _run/dispatcher/results.jsonl
+echo '{"round":5,"commit":"a1b2c3d","status":"keep","score":72,"description":"补充 /users 接口的请求参数说明"}' >> _run/dispatcher/results.jsonl
 ```
 
 字段说明：
 - `round`：轮次编号（整数）
 - `commit`：生成器 commit 的 short hash（fail/skip 时为 `null`）
 - `status`：`"keep"` / `"discard"` / `"fail"` / `"skip"`
+- `score`：评估器给出的 100 分制总分（整数，fail/skip 时为 `null`）
 - `description`：一句话概述本轮做了什么（不得超过 `config.md` 中 `result_max_bytes` 的设定，默认 200 字节）
 
 JSONL 格式的优势：
