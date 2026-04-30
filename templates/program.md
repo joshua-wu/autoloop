@@ -42,7 +42,7 @@ Dispatcher 启动时会收到一个**配置文件路径**（如 `config.md` 或 
      run.log
      ```
    - 读取配置中的 `dispatcher_prefix`、`generator_prefix`、`evaluator_prefix`，后续所有 git commit 使用对应前缀。
-5. **生成任务 prompt**：根据配置文件的内容，**实际读取 `target_files` 和 `readonly_files`**，结合 `generator.md` 和 `evaluator.md` 的通用指令，为本次任务生成两个专属的任务 prompt 文件。这是将用户的简短配置展开为具体工作指令的关键步骤，必须高质量完成。
+5. **生成任务 prompt**：根据配置文件的内容，**实际读取 `target_files` 和 `readonly_files`**，结合 `_run/generator.md` 和 `_run/evaluator.md` 的通用指令，为本次任务生成两个专属的任务 prompt 文件。这是将用户的简短配置展开为具体工作指令的关键步骤，必须高质量完成。
 
    **5a. 生成 `{RUN}/generator/task.md`** — 生成器的专属任务要求。包含：
      - 角色定义（从配置的 `role` 和 `task` 展开为具体描述）
@@ -72,12 +72,12 @@ Dispatcher 启动时会收到一个**配置文件路径**（如 `config.md` 或 
    <workdir>/                              ← Git 根目录 = 工作目录
      config.md                             ← 默认任务配置
      config-doc-optimize.md                ← 命名任务配置（可多个）
-     program.md                            ← 调度器指令（通用模板，共享）
-     generator.md                          ← 生成器通用指令（通用模板，共享）
-     evaluator.md                          ← 评估器通用指令（通用模板，共享）
      [target_files]                        ← 被生成器修改的目标文件
      [readonly_files]                      ← 只读参考文件
      _run/                                 ← [自动生成] 运行时产物（.gitignore）
+       program.md                          ← 调度器指令（通用模板，共享）
+       generator.md                        ← 生成器通用指令（通用模板，共享）
+       evaluator.md                        ← 评估器通用指令（通用模板，共享）
        dispatcher/                         ← 默认任务的调度器产物
          state.json
          results.jsonl
@@ -134,7 +134,7 @@ Agent({
 ```
 
 生成器 prompt 必须包含：
-- `generator.md` 的完整内容
+- `_run/generator.md` 的完整内容
 - `{RUN}/generator/task.md` 的完整内容（首次 Setup 时生成的专属任务要求）
 - 配置文件的完整内容（包含 `generator_strategy` 和 `generator_prefix`）
 - `{RUN}/generator/gen/summary.md` 的完整内容（生成器自己的历史摘要，延续之前的思路）
@@ -178,7 +178,7 @@ Agent({
 ```
 
 评估器 prompt 必须包含：
-- `evaluator.md` 的完整内容
+- `_run/evaluator.md` 的完整内容
 - `{RUN}/evaluator/task.md` 的完整内容（首次 Setup 时生成的专属任务要求）
 - 配置文件的完整内容（包含 `evaluator_depth`、`evaluator_prefix` 和 `evaluation_methods`）
 - `{RUN}/evaluator/eval/summary.md` 的完整内容（历史评估摘要）

@@ -9,7 +9,7 @@ description: Use when the user wants to set up an autonomous improvement loop wi
 
 ## 概述
 
-AutoLoop 是一套三角分工（调度器+生成器+评估器）的自主循环工作模板。此 skill 负责初始化和路由，循环逻辑在生成的 program.md 文件中。
+AutoLoop 是一套三角分工（调度器+生成器+评估器）的自主循环工作模板。此 skill 负责初始化和路由，循环逻辑在 `_run/program.md` 中。
 
 同一个目录下可以运行多个独立的 autoloop 任务，每个任务有自己的配置文件和运行时目录。
 
@@ -50,17 +50,31 @@ grep -l '<!-- autoloop-config -->' config.md config-*.md 2>/dev/null
 根据匹配结果分流：
 
 - **0 个匹配** → 走路径 A（首次初始化）
-- **1 个匹配** → 自动识别任务名，走路径 B（恢复/继续）或路径 A（如果没有 program.md）
+- **1 个匹配** → 自动识别任务名，走路径 B（恢复/继续）或路径 A（如果没有 `_run/program.md`）
 - **2+ 个匹配** → 列出所有任务，询问用户运行哪一个（或从 `/autoloop` 参数中读取任务名）
 
 **任务名推导**：
 - 文件名为 `config.md` → 任务名为空（默认任务）
 - 文件名为 `config-<task>.md` → 任务名为 `<task>`
 
+### Step 1.5：v1.0.0 迁移（兼容老任务）
+
+如果根目录存在 `program.md` 且包含 `<!-- autoloop-version: 1.0.0 -->`（老版本布局）：
+1. 告诉用户："检测到 v1.0.0 布局，将自动迁移到 v1.1.0（模板文件移入 _run/ 目录）"
+2. 确保 `_run/` 目录存在
+3. 执行迁移：
+   ```bash
+   mv program.md _run/program.md
+   mv generator.md _run/generator.md
+   mv evaluator.md _run/evaluator.md
+   ```
+4. 如果 `config.md` 存在但缺少 `<!-- autoloop-config -->` 标记，在文件头部插入该标记
+5. 继续后续流程（路径 B 会触发版本检查并提示升级模板）
+
 ### Step 2：路径判断
 
 确定任务后：
-- 检查 `program.md` 是否存在且包含 `<!-- autoloop-version: ... -->`
+- 检查 `_run/program.md` 是否存在且包含 `<!-- autoloop-version: ... -->`
 - 有版本标记 → 走路径 B（恢复/继续）
 - 无版本标记或文件不存在 → 走路径 A（首次初始化）
 
@@ -117,14 +131,14 @@ grep -l '<!-- autoloop-config -->' config.md config-*.md 2>/dev/null
 - `templates/evaluator.md`
 - `templates/config.md`
 
-**如果 program.md、generator.md、evaluator.md 不存在**，写入当前工作目录，每个文件头部加入版本标记：
+**如果 `_run/program.md`、`_run/generator.md`、`_run/evaluator.md` 不存在**，创建 `_run/` 目录并写入，每个文件头部加入版本标记：
 ```
 <!-- autoloop-version: 1.1.0 -->
 ```
 
 **如果已存在**（多任务场景下前一个任务已创建），跳过——这些模板是所有任务共享的。
 
-根据用户在 Step 1 的回答，生成配置文件：
+根据用户在 Step 1 的回答，生成配置文件到项目根目录：
 - 无任务名 → 写入 `config.md`
 - 有任务名 → 写入 `config-<task>.md`
 
@@ -132,7 +146,7 @@ grep -l '<!-- autoloop-config -->' config.md config-*.md 2>/dev/null
 
 ### Step 3：启动
 
-告诉用户文件已就绪，然后直接读取 `program.md` 并按其中的 Setup 流程执行。传入配置文件路径（如 `config-doc-optimize.md`）。
+告诉用户文件已就绪，然后直接读取 `_run/program.md` 并按其中的 Setup 流程执行。传入配置文件路径（如 `config-doc-optimize.md`）。
 
 ---
 
@@ -142,10 +156,10 @@ grep -l '<!-- autoloop-config -->' config.md config-*.md 2>/dev/null
 
 ### Step 1：版本检查
 
-从 `program.md` 头部提取版本号，与 skill 内置版本（1.1.0）对比：
+从 `_run/program.md` 头部提取版本号，与 skill 内置版本（1.1.0）对比：
 - **匹配** → 继续
-- **不匹配** → 告诉用户："模板文件版本为 vX.X.X，当前 skill 版本为 v1.1.0。是否要更新模板文件？（配置文件和 _run/ 目录会保留）"
-  - 用户同意 → 重新写入 program.md、generator.md、evaluator.md（保留所有 config*.md 和 _run/）
+- **不匹配** → 告诉用户："模板文件版本为 vX.X.X，当前 skill 版本为 v1.1.0。是否要更新模板文件？（配置文件和运行时数据会保留）"
+  - 用户同意 → 重新写入 `_run/program.md`、`_run/generator.md`、`_run/evaluator.md`（保留所有 config*.md 和 `_run/` 下的其他内容）
   - 用户拒绝 → 使用当前文件继续
 
 ### Step 2：状态检查
@@ -160,7 +174,7 @@ grep -l '<!-- autoloop-config -->' config.md config-*.md 2>/dev/null
 
 ### Step 3：启动
 
-读取 `program.md` 并按其中的逻辑执行（Setup 或 Main Loop）。传入配置文件路径。
+读取 `_run/program.md` 并按其中的逻辑执行（Setup 或 Main Loop）。传入配置文件路径。
 
 ---
 
@@ -168,8 +182,8 @@ grep -l '<!-- autoloop-config -->' config.md config-*.md 2>/dev/null
 
 如果用户明确要求更新模板（如"更新 autoloop 模板"、"升级模板"）：
 
-1. 从 `templates/` 重新写入 `program.md`、`generator.md`、`evaluator.md`（带新版本号）
-2. **保留** 所有 `config*.md` 文件和 `_run/` 目录（不丢失用户配置和历史）
+1. 从 `templates/` 重新写入 `_run/program.md`、`_run/generator.md`、`_run/evaluator.md`（带新版本号）
+2. **保留** 所有 `config*.md` 文件和 `_run/` 下的其他内容（不丢失用户配置和历史）
 3. 告诉用户"模板已更新到 v1.1.0，配置文件和历史记录已保留"
 
 ---
@@ -177,7 +191,7 @@ grep -l '<!-- autoloop-config -->' config.md config-*.md 2>/dev/null
 ## 注意事项
 
 - 此 skill 只负责初始化和路由，**不包含循环逻辑**
-- 循环逻辑在 `program.md` 中，由主会话读取并执行
-- skill 执行完毕后，应让主会话接管（读取 program.md）
-- `program.md`、`generator.md`、`evaluator.md` 是所有任务共享的模板，不按任务区分
+- 循环逻辑在 `_run/program.md` 中，由主会话读取并执行
+- skill 执行完毕后，应让主会话接管（读取 `_run/program.md`）
+- `_run/program.md`、`_run/generator.md`、`_run/evaluator.md` 是所有任务共享的模板，不按任务区分
 - 每个任务的差异体现在各自的 `config[-<task>].md` 和 `_run/[<task>/]` 目录中

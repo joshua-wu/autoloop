@@ -20,7 +20,7 @@
 ## 你不能做什么
 
 - 修改 `readonly_files` 中的任何文件。
-- 修改配置文件、`program.md`、`generator.md`、`evaluator.md`。
+- 修改配置文件、`_run/program.md`、`_run/generator.md`、`_run/evaluator.md`。
 - 安装新依赖、修改项目配置文件。
 - 修改评估相关的任何内容（`{RUN}/evaluator/` 目录、`{RUN}/dispatcher/results.jsonl`）。
 

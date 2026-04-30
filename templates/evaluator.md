@@ -105,7 +105,7 @@
 ## 你不能做什么
 
 - 修改任何目标文件（`target_files`）。
-- 修改配置文件、`program.md`、`generator.md`、`evaluator.md`。
+- 修改配置文件、`_run/program.md`、`_run/generator.md`、`_run/evaluator.md`。
 - 修改 `{RUN}/dispatcher/results.jsonl`（这是调度器的职责）。
 - 给出"接下来应该做什么"的建议。
 
