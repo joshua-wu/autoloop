@@ -57,20 +57,6 @@ grep -l '<!-- autoloop-config -->' config.md config-*.md 2>/dev/null
 - 文件名为 `config.md` → 任务名为空（默认任务）
 - 文件名为 `config-<task>.md` → 任务名为 `<task>`
 
-### Step 1.5：v1.0.0 迁移（兼容老任务）
-
-如果根目录存在 `program.md` 且包含 `<!-- autoloop-version: 1.0.0 -->`（老版本布局）：
-1. 告诉用户："检测到 v1.0.0 布局，将自动迁移到 v1.1.0（模板文件移入 _run/ 目录）"
-2. 确保 `_run/` 目录存在
-3. 执行迁移：
-   ```bash
-   mv program.md _run/program.md
-   mv generator.md _run/generator.md
-   mv evaluator.md _run/evaluator.md
-   ```
-4. 如果 `config.md` 存在但缺少 `<!-- autoloop-config -->` 标记，在文件头部插入该标记
-5. 继续后续流程（路径 B 会触发版本检查并提示升级模板）
-
 ### Step 2：路径判断
 
 确定任务后：
