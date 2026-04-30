@@ -1,3 +1,4 @@
+<!-- autoloop-config -->
 # Task Configuration
 
 ## Identity
