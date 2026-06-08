@@ -283,9 +283,10 @@ JSONL 格式的优势：
 每轮结束（Step 5 之后），检查以下停止条件。任一条件满足即**停止循环**并输出摘要：
 
 1. **轮数上限**：当前轮次 N ≥ `max_rounds` → 停止。输出"已达最大轮数"。
-2. **连续 skip**：连续 skip 次数 ≥ `max_consecutive_skip` → 停止。输出"生成器连续多轮无法找到改进方向"。
-3. **连续 discard**：连续 discard 次数 ≥ `max_consecutive_discard` → 停止。输出"改动连续多轮未通过评估"。
-4. **连续 fail**：连续 fail 次数（每轮重试耗尽才计入）≥ `max_consecutive_fail` → 停止。输出错误摘要等待用户介入。
+2. **分数达标**：本轮 status 为 keep 且 score ≥ `score_target`（默认 95）→ 停止。输出"分数已达目标（score/score_target），任务完成"。仅在配置了 `score_target` 时生效。
+3. **连续 skip**：连续 skip 次数 ≥ `max_consecutive_skip` → 停止。输出"生成器连续多轮无法找到改进方向"。
+4. **连续 discard**：连续 discard 次数 ≥ `max_consecutive_discard` → 停止。输出"改动连续多轮未通过评估"。
+5. **连续 fail**：连续 fail 次数（每轮重试耗尽才计入）≥ `max_consecutive_fail` → 停止。输出错误摘要等待用户介入。
 
 注意：单轮内的重试不计入连续 fail 计数，只有重试耗尽后才算一轮 fail。
 

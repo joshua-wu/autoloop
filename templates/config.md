@@ -57,6 +57,7 @@ max_rounds: 100                 # 达到此轮数后停止循环
 max_consecutive_skip: 5         # 连续 skip（无改动）次数达到此值后停止
 max_consecutive_discard: 10     # 连续 discard 次数达到此值后停止
 max_consecutive_fail: 3         # 连续 fail（重试耗尽）次数达到此值后停止
+score_target: 95                # 分数达到此值后停止循环（null 表示不启用）
 
 ## Progress Report
 report_interval: 5              # 每 N 轮输出一次进度摘要（纯输出，不暂停，不等待用户回复）

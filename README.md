@@ -178,6 +178,7 @@ evaluation_methods:
 | `evaluator_depth` | `quantitative` / `qualitative` / `mixed` | `mixed` |
 | `evaluation_methods` | 评估命令和方式 | — |
 | `max_rounds` | 最大循环轮数 | `100` |
+| `score_target` | 分数达标停止阈值 | `95` |
 | `max_consecutive_fail` | 连续失败停止阈值 | `3` |
 | `max_consecutive_discard` | 连续丢弃停止阈值 | `10` |
 | `max_consecutive_skip` | 连续跳过停止阈值 | `5` |
